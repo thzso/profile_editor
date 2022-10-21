@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Profile editor</title>
+	<link rel="stylesheet" href="public/style.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Source+Sans+Pro&display=swap"
+		rel="stylesheet" />
+</head>
+
+<body>
+	<div id="root">
+		<form id="form">
+
+			<label for="firstName">First Name</label>
+			<input type="text" name="firstname" id="firstName">
+
+			<label for="surname">Last Name</label>
+			<input type="text" name="surname" id="surname">
+
+
+
+			<label for="zipCode">Zip</label>
+			<input id="zipCode" name="zipCode" type="text" pattern="[0-9]*">
+
+			<label for="country">Country</label>
+			<input type="text" id="country" name="country">
+
+			<label for="city">City</label>
+			<input type="text" id="city" name="city">
+
+			<label for="street">Street</label>
+			<input type="text" name="street" id="street">
+
+			<label for="houseNumber">House-number</label>
+			<input type="text" name="houseNumber" id="houseNumber" pattern="[0-9]*">
+
+
+
+			<label for="picture">Profile Picture</label>
+			<input type="image" name="picture" src="" alt=""
+				placeholder="profile-editor\frontend\public\placeholder.jpg">
+		</form>
+
+		<button type="submit" id="submit">Save</button>
+		<button type="reset">Delete</button>
+
+
+	</div>
+	<script src="public/script.js"></script>
+</body>
+
+</html>
