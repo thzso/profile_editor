@@ -1,108 +1,148 @@
+const root = document.getElementById("root");
+const profileDiv = document.createElement("div");
+profileDiv.setAttribute("id", "profileData");
 
+const init = () => {
+  const imageDiv = document.createElement("div");
+  imageDiv.setAttribute("id", "imageSpace");
 
-const addData = async (	firstName, surname, country, zipCode, city, street, houseNumber) => {
-    const url = 'http://127.0.0.1:9000'
+  const image = document.createElement("img");
+  image.setAttribute("id", "profileImage");
+  image.setAttribute(
+    "src",
+    "http://127.0.0.1:9000/profileImage/placeholder.jpg"
+  );
 
-    const response = await fetch(url, {
-        method: "POST",
-        // mode: "no-cors",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({firstName,surname,country, zipCode, city, street, houseNumber})
-    })
-    return response.status
+  imageDiv.append(image);
+ 
+  root.append(imageDiv);
+
+  const createForm = () => {
+    const setMultipleAttributes = (elem, type, name) => {
+      const attributes = {
+        type: type,
+        name: name,
+        id: name,
+        placeholder: name,
+        required: "",
+      };
+      Object.entries(attributes).forEach(([key, value]) => {
+        elem.setAttribute(key, value);
+      });
+    };
+
+    const form = document.createElement("form");
+    form.setAttribute("id", "form");
+
+    const fileUploadWrapper = document.createElement("div");
+    fileUploadWrapper.setAttribute("id", "file-upload-wrapper");
+    
+    const span = document.createElement("span");
+    span.setAttribute("id", "icon");
+    span.setAttribute("class", "material-symbols-outlined");
+    span.innerText = "drive_folder_upload";
+    
+    fileUploadWrapper.appendChild(span);
    
-};
+    const fileInput = document.createElement("input");
+    setMultipleAttributes(fileInput, "file", "image");
+    fileInput.setAttribute("accept", "image/*");
 
-const init = async () => {
-document.getElementById("submit").addEventListener('click', async () => {
-    const firstName = document.getElementById("firstName").value
-    const surname = document.getElementById("surname").value
-    const country = document.getElementById("country").value
-    const zipCode = document.getElementById("zipCode").value
-    const city= document.getElementById("city").value
-    const street = document.getElementById("street").value
-    const houseNumber = document.getElementById("houseNumber").value
+    fileUploadWrapper.appendChild(fileInput);
 
-    console.log(firstName, surname, country, zipCode, city, street, houseNumber)
+    const nameInput = document.createElement("input");
+    setMultipleAttributes(nameInput, "text", "name");
+    nameInput.setAttribute("maxlength", "20");
 
-    const resStatus = await addData(firstName, surname, country, zipCode, city, street, houseNumber)
-    if (resStatus === 200){
-        alert("ok")
-    }else{
-        alert("err")
-       
+    const emailInput = document.createElement("input");
+    setMultipleAttributes(emailInput, "email", "email");
+
+    const aboutTextarea = document.createElement("textarea");
+    setMultipleAttributes(aboutTextarea, "text", "about");
+    aboutTextarea.setAttribute("rows", "6");
+    aboutTextarea.setAttribute("maxlength", "100");
+
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "submit";
+    saveBtn.id = "save";
+    saveBtn.innerText = "SAVE";
+
+    form.append(
+      fileUploadWrapper,
+      nameInput,
+      emailInput,
+      aboutTextarea,
+      saveBtn
+    );
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files.length > 0) {
+        document.getElementById("profileImage").src = URL.createObjectURL(
+          e.target.files[0]
+        );
+      }
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      addProfile(formData);
+    });
+
+    root.append(form);
+  };
+  createForm();
+
+  const createProfile = (responseMessage) => {
+    root.removeChild(form);
+    profileDiv.innerHTML = "";
+
+    if (responseMessage) {
+      const timeStamp = Date.now();
+      image.src = `http://127.0.0.1:9000/profileImage/profile.jpg?timestamp=${timeStamp}`;
+
+      for (const [key, value] of Object.entries(responseMessage)) {
+        const div = document.createElement("div");
+        div.setAttribute("id", `${key}Data`);
+        div.setAttribute("class", "data");
+        const newContent = document.createTextNode(value);
+        div.appendChild(newContent);
+        profileDiv.append(div);
+      }
+      const deleteBtn = document.createElement("button");
+      deleteBtn.setAttribute("type", "button");
+      deleteBtn.setAttribute("id", "delete");
+      deleteBtn.innerHTML = "DELETE";
+      deleteBtn.addEventListener("click", deleteProfile);
+      profileDiv.append(deleteBtn);
+      root.append(profileDiv);
+    } else {
+      console.log("ERROR");
     }
-});
+  };
 
-}
+  const addProfile = async (formData) => {
+    const url = "http://127.0.0.1:9000";
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+    const responseMessage = await response.json();
+    createProfile(responseMessage);
+  };
 
-init()
+  const deleteProfile = async () => {
+    const url = "http://127.0.0.1:9000";
+    const response = await fetch(url, {
+      method: "DELETE",
+    });
 
-
-
-
-// async function loadData (){
-//     const response = await fetch('http://localhost:9000')
-//     const data = response.json()
-//     console.log(data)
-// }
-// loadData()
-
-
-// const getProfileData = async () => {
-//     let response = await fetch('http://localhost:9000')
-//     const profileData = await response.json()
-//     // return profileData
-//     console.log(profileData)
-   
-// }
-
-// getProfileData()
-
-// const run = async () => {
-//     const profileData = await getProfileData()
-//     console.log(profileData)
-// }
-
-// run()
-
-
-
-// const submitBtn = document.getElementById('submit')
-// const formelements = document.getElementById('form')
-// console.log(formelements.elements)
-
-
-// submitBtn.addEventListener('click', function () {
-//     const data = []
-//     for (let elem of formelements) {
-//         data.push(elem.value)
-//     }
-
-
-//     console.log(data)
-//     console.log('submit')
-// })
-
-    // 
-
-    // const newData ={
-    //     "firstName": firstName,
-    //     "surname": surname,
-    //     "country": country,
-    //     "zipCode": zipCode,
-    //     "city": city,
-    //     "street": street,
-    //     "houseNumber": houseNumber,
-        
-    // }
-
-
-
-
-
-
-
-
+    if (response.status === 200) {
+      image.src = "http://127.0.0.1:9000/profileImage/placeholder.jpg";
+      root.removeChild(profileDiv);
+      createForm();
+    }
+    return response.status;
+  };
+};
+init();

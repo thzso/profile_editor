@@ -1,80 +1,65 @@
-
-
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const path = require("path");
 const app = express();
+const cors = require("cors");
 
-
+const port = 9000;
 
 app.use(express.json());
 app.use(fileUpload());
-
-app.get("/", (req, res) =>
-	res.sendFile(path.join(`${__dirname}/../frontend/index.html`))
-);
-
+app.use(cors());
 app.use("/public", express.static(`${__dirname}/../frontend/public`));
-
-app.get("/profile.jpg", (req, res) =>
-	res.sendFile(path.join(`${__dirname}/../backend/data/profile.jpg`))
+app.use(
+  "/profileImage",
+  express.static(path.join(__dirname, "data/profileImage/"))
 );
 
 app.post("/", (req, res) => {
-	
-console.log(req.body)
+  const { image } = req.files;
+  const imageUploadPath =
+    __dirname + "/../backend/data/profileImage/profile.jpg";
 
-	const pictureUploadPath = __dirname + "/../backend/data/" + "profile.jpg";
+  image.mv(imageUploadPath);
 
-	if (req.files) {
-		const uploadedPicture = req.files.picture;
-		uploadedPicture.mv(pictureUploadPath, (err) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err);
-			}
-		});
-	}
+  const data = JSON.stringify(req.body);
+  const uploadPath = __dirname + "/../backend/data/" + "profile.json";
 
-	const fileData = JSON.parse(JSON.stringify(req.body));
-	fileData.picture = "/profile.jpg";
-	const fileDataString = JSON.stringify(fileData, null, 2);
-	const uploadPath = __dirname + "/../backend/data/" + "profile.json";
-
-	fs.writeFileSync(uploadPath, fileDataString, (err) => {
-		if (err) {
-			console.log(err);
-			return res.status(500).send(err);
-		}
-	});
-
-	return res.send(fileDataString);
+  fs.writeFileSync(uploadPath, data, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+  });
+  res.status(200).send(data);
 });
 
 app.delete("/", (req, res) => {
-	const pictureUploadPath = __dirname + "/../backend/data/" + "profile.jpg";
-	const uploadPath = __dirname + "/../backend/data/" + "profile.json";
+  const pictureUploadPath =
+    __dirname + "/../backend/data/profileImage/profile.jpg";
+  const uploadPath = __dirname + "/../backend/data/" + "profile.json";
 
-	if (fs.existsSync(pictureUploadPath)) {
-		fs.unlinkSync(pictureUploadPath, (err) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err);
-			}
-		});
-	}
+  if (fs.existsSync(pictureUploadPath)) {
 
-	if (fs.existsSync(uploadPath)) {
-		fs.unlinkSync(uploadPath, (err) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err);
-			}
-		});
-	}
+    fs.unlinkSync(pictureUploadPath, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+    });
+  }
 
-	return res.status(200).send("done");
+  if (fs.existsSync(uploadPath)) {
+    fs.unlinkSync(uploadPath, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+    });
+  }
+
+  return res.status(200).send(JSON.stringify("done"));
 });
 
-app.listen(9000, (_) => console.log("127.0.0.1:9000"));
+app.listen(port, (_) => console.log("127.0.0.1:9000"));

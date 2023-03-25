@@ -1,43 +1,140 @@
-/* --- start of CSS reset --- */
-
 * {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: none;
-	box-sizing: border-box;
-	background: transparent;
-	font-family: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*:focus {
+  outline: none;
 }
 
-a {
-	text-decoration: none;
+:root {
+  --color-background: #084887;
+  --color-font: white;
+  --color-light: #6699cc;
+  --color-button: #c60f7b;
+  --color-button-border: #ff9fe5;
+  --color-hover: #f90093;
+  /* --color-input-border : #BCF4F5; */
+}
+html {
+  font-size: 62.5%;
 }
 
-a img {
-	border: none;
+body {
+  font-size: 1.6rem;
+  color: var(--color-font);
+  background: var(--color-background);
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: arial;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+}
+button {
+  padding: 1rem;
+  width: 100%;
+  margin: 1rem;
+  font-weight: bold;
+  background-color: var(--color-button);
+  color: var(--color-font);
+  border-color: var(--color-button-border);
+  transition: background-color 0.5s ease-out;
+}
+button:hover {
+  background-color: var(--color-hover);
+}
+input,
+textarea {
+  text-align: center;
+  font-size: 1.6rem;
+  padding: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--color-light);
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+}
+input:focus,
+textarea:focus {
+  border: 1px solid var(--color-font);
+  box-sizing: border-box;
 }
 
-button,
-a {
-	cursor: pointer;
-	color: inherit;
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-light);
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset !important;
+  -webkit-text-fill-color: var(--color-font) !important;
+}
+
+input[type="file"]::file-selector-button {
+  display: none;
 }
 
 textarea {
-	resize: none;
+  resize: none;
 }
 
-button,
-textarea,
-select {
-	appearance: none !important;
-	border-radius: 0;
+#file-upload-wrapper {
+  position: relative;
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  align-items: center;
 }
 
-/* --- end of CSS reset --- */
+#file-upload-wrapper > input {
+  position: absolute;
+  border: 1px dashed var(--color-light);
+  color: var(--color-light);
+  right: 0;
+  text-align: center;
+}
 
-fieldset{
-	display: flex;
-	flex-direction: column;
+#icon {
+  position: absolute;
+  right: 0;
+  padding-right: 4%;
+  pointer-events: none;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin: 2rem;
+}
+
+#profileData {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+}
+#nameData {
+  font-weight: bold;
+  font-size: large;
+}
+
+#aboutData {
+  width: 200px;
+  word-wrap: break-word;
+  text-align: center;
+  color: var(--color-light);
 }
